@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
-//Navigation handlers
+// Navigation handlers
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 
-//Screens
+// Screens
 import WelcomeScreen from "../screens/auth/welcome-screen";
 import SigninScreen from "../screens/auth/signin-screen";
 import SignupScreen from "../screens/auth/signup-screen";
@@ -14,7 +14,7 @@ import ImageScreen from "../screens/auth/image-screen";
 
 const Stack = createStackNavigator();
 
-const AuthNavigation = ({}) => {
+const AuthNavigation = () => {
   const [isFirstOpening, setIsFirstOpening] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,7 +22,7 @@ const AuthNavigation = ({}) => {
     const checkFirstOpening = async () => {
       try {
         const opening = await SecureStore.getItem("isFirstOpening");
-        if (opening === null) {
+        if (!opening) {
           setIsFirstOpening(true);
         } else {
           setIsFirstOpening(false);

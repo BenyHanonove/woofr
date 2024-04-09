@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  StatusBar,
 } from "react-native";
 
 //Import image picker
@@ -15,8 +16,11 @@ import BigText from "../../components/texts/big-text/big-text";
 import RegularText from "../../components/texts/regular-text/regular-text";
 import SmallText from "../../components/texts/small-text/small-text";
 import RegularButton from "../../components/buttons/regular-button/regular-button";
+import { useNavigation } from "@react-navigation/native";
 
 const ImageScreen = ({}) => {
+  const navigation = useNavigation();
+
   //State to save the image
   const [image, setImage] = useState(null);
 
@@ -38,12 +42,9 @@ const ImageScreen = ({}) => {
     }
   };
 
-  const uploadImage = () => {};
-
-  const skipImageImageUpload = () => {};
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
       <View style={styles.container}>
         <View style={styles.header}>
           <BigText text={"כותרת של הדף"} />

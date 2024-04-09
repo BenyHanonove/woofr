@@ -42,7 +42,7 @@ const WelcomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <BigText text={"PAWSWIPE"} />
+        <BigText text={"WOOFR"} />
         <FeatureSlider index={index} setIndex={setIndex} scrollX={scrollX} />
         <RegularButton
           text={"בוא נתחיל"}

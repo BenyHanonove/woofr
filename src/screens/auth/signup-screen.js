@@ -1,87 +1,132 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   TextInput,
   View,
-  ScrollView,
   SafeAreaView,
+  TouchableOpacity,
+  Platform,
+  ScrollView,
+  StatusBar,
 } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-//Import Dropdown Picker component
-import DropDownPicker from "react-native-dropdown-picker";
-//Import DateTime Picker component
-import DateTimePicker from "@react-native-community/datetimepicker";
 
-//Import SnackBar Picker component
+//Navigation handler
+import { useNavigation } from "@react-navigation/native";
+
+//Packages to handel user input
+import DropDownPicker from "react-native-dropdown-picker";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { Snackbar } from "react-native-paper";
 
-//React native expo store handler
+//User id generator
+import uuid from "react-native-uuid";
+
+//Store user data handler
 import * as SecureStore from "expo-secure-store";
 
-//Import custom components
+//Custom components
 import BigText from "../../components/texts/big-text/big-text";
 import RegularButton from "../../components/buttons/regular-button/regular-button";
 import RegularText from "../../components/texts/regular-text/regular-text";
+import GoBackButton from "../../components/buttons/go-back/go-back-button";
+
+//Import data and validators
 import { signupValidator } from "../../utils/scripts/formValidate";
+import { genders } from "../../utils/data/gender";
+
+const isIos = Platform.OS === "ios";
 
 const SignupScreen = () => {
+  //Navigation handler
   const navigation = useNavigation();
 
-  // State for user data
+  // State for managing the visibility of gender selection
+  const [openGender, setOpenGender] = useState(false);
+
+  // State for managing the visibility of the date picker
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+  // State for storing text to be displayed in the snackbar
+  const [snackBarText, setSnackBarText] = useState("");
+
+  // State for managing the visibility of the snackbar
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  // State object to manage user data
   const [userData, setUserData] = useState({
+    id: "", // User ID
     firstName: "", // User's first name
     lastName: "", // User's last name
     gender: "", // User's gender
-    birthday: new Date(), // User's birthday, initialized with current date
+    birthday: new Date(), // User's birthday (initialized to current date)
     email: "", // User's email address
     password: "", // User's password
     confirm: "", // Confirmation of user's password
   });
 
-  // State for dropdown picker visibility
-  const [openGender, setOpenGender] = useState(false);
+  // Check if the app runs on iPhone
+  useEffect(() => {
+    // If the app runs on iPhone, show the date picker
+    if (isIos) {
+      setShowDatePicker(true);
+    }
+  }, []);
 
-  // Function to handle gender change
+  // Function to handle date selection
+  const handleDateSelection = (event, selectedDate) => {
+    // If the app doesn't run on iPhone, hide the date picker
+    if (!isIos) {
+      setShowDatePicker(false);
+    }
+    // Get the selected date or use the current user's birthday
+    const currentDate = selectedDate || userData.birthday;
+    // Update the user data with the selected date
+    setUserData({ ...userData, birthday: currentDate });
+  };
+
+  // Function to handle form submission
   const handleSubmit = async () => {
+    // Validate the user data using signupValidator
     const formCheck = signupValidator(userData);
+
+    // If the form validation fails
     if (formCheck.isValid === false) {
+      // Set snackbar text to display the error message
       setSnackBarText(formCheck.errorMessage);
+      // Open the snackbar
       setSnackbarOpen(true);
 
-      // Set snackbar open for 3 seconds
+      // Close the snackbar after 3 seconds
       setTimeout(() => {
         setSnackbarOpen(false);
-        return;
       }, 3000);
-      return; // Return early if form is invalid
+      return;
     }
 
-    const saveUser = async () => {
-      try {
-        await SecureStore.setItemAsync("secure_token1", "sahdkfjaskdflas$%^&");
-        navigation.navigate("Image");
-      } catch (error) {
-        // Handle any errors that occur during saving the token
-        console.error("Error saving token:", error);
-        // Optionally, show an error message to the user
-      }
-    };
-
-    // Call the saveUser function
+    // Generate a unique ID for the user data and Save user data
+    setUserData({ ...userData, id: uuid.v4() });
     await saveUser();
   };
 
-  const genders = [
-    { label: "זכר", value: "male" },
-    { label: "נקבה", value: "female" },
-    { label: "אחר", value: "other" },
-  ];
-
-  const [snackBarText, setSnackBarText] = useState("");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  // Function to save user data (supposed to interact with an API)
+  const saveUser = async () => {
+    try {
+      // Placeholder for interacting with an API to save user data
+      // Example: const response = await axios.post('/api/user', userData);
+    } catch (error) {
+      // Log any errors that occur during the process
+      console.error("Error saving user data:", error);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
+      <GoBackButton
+        onPress={() => {
+          navigation.navigate("Signin");
+        }}
+      />
       <View style={styles.container}>
         <View style={styles.header}>
           <BigText text={"הצטרף לחוויה שלנו"} />
@@ -92,8 +137,8 @@ const SignupScreen = () => {
           />
         </View>
 
-        <ScrollView style={styles.scrollView}>
-          <View>
+        <View style={styles.formScroll}>
+          <ScrollView>
             <TextInput
               value={userData.firstName}
               placeholder="שם פרטי"
@@ -137,26 +182,41 @@ const SignupScreen = () => {
                 setUserData({ ...userData, confirm: value });
               }}
             />
+          </ScrollView>
+        </View>
 
-            <DateTimePicker
-              value={userData.birthday}
-              onChange={(event, selectedDate) => {
-                const currentDate = selectedDate || userData.birthday;
-                setUserData({ ...userData, birthday: currentDate });
-              }}
+        {isIos ? null : (
+          <TouchableOpacity
+            onPress={() => {
+              setShowDatePicker(true);
+            }}
+          >
+            <RegularText
+              text={`${userData.birthday.getUTCFullYear()}-${
+                userData.birthday.getMonth() + 1
+              }-${userData.birthday.getDate()}`}
             />
+          </TouchableOpacity>
+        )}
 
-            <DropDownPicker
-              open={openGender}
-              value={userData.gender}
-              items={genders}
-              setOpen={setOpenGender}
-              onSelectItem={(value) => {
-                setUserData({ ...userData, gender: value["value"] });
-              }}
-            />
-          </View>
-        </ScrollView>
+        {showDatePicker && (
+          <DateTimePicker
+            value={userData.birthday}
+            onChange={handleDateSelection}
+          />
+        )}
+
+        <View style={styles.input}>
+          <DropDownPicker
+            open={openGender}
+            value={userData.gender}
+            items={genders}
+            setOpen={setOpenGender}
+            onSelectItem={(value) => {
+              setUserData({ ...userData, gender: value["value"] });
+            }}
+          />
+        </View>
 
         <RegularButton text={"הירשם"} onPress={handleSubmit} />
       </View>
@@ -200,6 +260,9 @@ const styles = StyleSheet.create({
     padding: 10,
     marginVertical: 5,
     width: 300,
+  },
+  formScroll: {
+    height: 300,
   },
 });
 

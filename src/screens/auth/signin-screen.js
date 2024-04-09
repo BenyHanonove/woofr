@@ -1,12 +1,18 @@
 // SigninScreen.js
-import React from "react";
-import { StyleSheet, TextInput, View } from "react-native";
-
-//React native expo store handler
-import { SecureStore } from "expo";
+import React, { useEffect, useState } from "react";
+import {
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  TextInput,
+  View,
+} from "react-native";
 
 //Navigation handler
 import { useNavigation } from "@react-navigation/native";
+
+//Store package for react native expo
+import * as SecureStore from "expo-secure-store";
 
 //Custom components
 import BigText from "../../components/texts/big-text/big-text";
@@ -17,15 +23,26 @@ const SigninScreen = () => {
   // Navigation object for navigating between screens
   const navigation = useNavigation();
 
+  //State to save the form data for login
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+
   // Function to login user
-  const loginUser = async () => {
-    // Dummy function to generate user token (to be replaced with actual login logic)
-    const saveUser = () => {
-      return "sahdkfjaskdflas$%^&";
+  const handleLoginEvent = async () => {
+    const tempUser = {
+      id: "123456",
+      firstName: "John",
+      lastName: "Doe",
+      gender: "Male",
+      birthday: new Date(1990, 5, 15),
+      email: "johndoe@example.com",
+      password: "password123",
+      confirm: "password123",
     };
 
-    // Save user token securely using SecureStore
-    await SecureStore.setItemAsync("secure_token", saveUser);
+    await SecureStore.setItem("user", JSON.stringify(tempUser));
   };
 
   // Navigate to the Signup screen using the navigation object
@@ -34,25 +51,42 @@ const SigninScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <BigText text={"היי כיף לראות שחזרת"} />
-        <RegularText
-          text={"אנחנו פה בשביל חיות המחמד שלך בלה בלה בלה צמשיך לעשות כיף פה"}
-        />
-      </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <BigText text={"היי כיף לראות שחזרת"} />
+          <RegularText
+            text={
+              "אנחנו פה בשביל חיות המחמד שלך בלה בלה בלה להמשיך לעשות כיף פה"
+            }
+          />
+        </View>
 
-      <View>
-        <TextInput placeholder="email ..." style={styles.input} />
-        <TextInput placeholder="password..." style={styles.input} />
-      </View>
+        <View>
+          <TextInput
+            placeholder="איימל"
+            style={styles.input}
+            onChangeText={(value) => {
+              setLoginData({ ...loginData, email: value });
+            }}
+          />
+          <TextInput
+            placeholder="סיסמא"
+            style={styles.input}
+            onChangeText={(value) => {
+              setLoginData({ ...loginData, password: value });
+            }}
+          />
+        </View>
 
-      <View>
-        <RegularButton text={"התחבר"} onPress={loginUser} />
-        <View style={styles.divider}></View>
-        <RegularButton text={"הירשם"} onPress={moveToSignup} />
+        <View>
+          <RegularButton text={"התחבר"} onPress={handleLoginEvent} />
+          <View style={styles.divider}></View>
+          <RegularButton text={"הירשם"} onPress={moveToSignup} />
+        </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
