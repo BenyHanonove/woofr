@@ -1,18 +1,16 @@
 // HomeScreen.js
 import React from "react";
-import { StyleSheet, View, Text, Image } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import WoofrHeader from "./WoofrHeader";
+import Feed from "./Feed"
 
 const HomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <View style={{ width: '100%', alignItems:"flex-end" }}>
-          <Image
-            style={styles.logo}
-            source={require('../../images/logo-wofer2.png')}
-          />
-        </View>
+        <WoofrHeader/>
+        <Feed/>
       </View>
     </SafeAreaView>
   );
