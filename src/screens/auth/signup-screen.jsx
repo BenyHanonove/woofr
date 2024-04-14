@@ -29,17 +29,17 @@ const SignupScreen = () => {
 
   // State for user data
   const [userData, setUserData] = useState({
+    username: "",
     firstName: "", // User's first name
     lastName: "", // User's last name
     gender: "", // User's gender
-    birthday: new Date(), // User's birthday, initialized with current date
+    birthDate: new Date(), // User's birthday, initialized with current date
     email: "", // User's email address
     password: "", // User's password
-    confirm: "", // Confirmation of user's password
   });
 
 
-  
+
 
   // State for dropdown picker visibility
   const [openGender, setOpenGender] = useState(false);
@@ -62,8 +62,8 @@ const SignupScreen = () => {
     const saveUser = async () => {
       try {
         // Save token using SecureStore
-    //    await SecureStore.setItemAsync("secure_token1", "sahdkfjaskdflas$%^&");
-    
+        //    await SecureStore.setItemAsync("secure_token1", "sahdkfjaskdflas$%^&");
+
         // Make API request to register user
         const apiUrl = 'https://localhost:7207/api/Users';
         fetch(apiUrl, {
@@ -73,29 +73,29 @@ const SignupScreen = () => {
           },
           body: JSON.stringify(userData) // Pass user data as JSON
         })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to register user');
-          }
-          return response.json();
-        })
-        .then(data => {
-          console.log('User registered successfully:', data);
-          // Navigate to next screen or perform other actions
-          navigation.navigate('Image');
-        })
-        .catch(error => {
-          // Handle any errors that occur during the API request
-          console.error('Error:', error);
-          // Optionally, show an error message to the user
-        });
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to register user');
+            }
+            return response.json();
+          })
+          .then(data => {
+            console.log('User registered successfully:', data);
+            // Navigate to next screen or perform other actions
+            navigation.navigate('Image');
+          })
+          .catch(error => {
+            // Handle any errors that occur during the API request
+            console.error('Error:', error);
+            // Optionally, show an error message to the user
+          });
       } catch (error) {
         // Handle any errors that occur during saving the token
         console.error('Error:', error);
         // Optionally, show an error message to the user
       }
     };
-    
+
 
     // Call the saveUser function
     await saveUser();
@@ -140,6 +140,14 @@ const SignupScreen = () => {
                 setUserData({ ...userData, lastName: value });
               }}
             />
+            <TextInput
+              value={userData.username}
+              placeholder="שם משתמש"
+              style={styles.input}
+              onChangeText={(value) => {
+                setUserData({ ...userData, username: value });
+              }}
+            />
 
             <TextInput
               value={userData.email}
@@ -169,13 +177,13 @@ const SignupScreen = () => {
             />
 
             <DateTimePicker
-              value={userData.birthday}
+              value={userData.birthDate} // Provide the current date as the initial value
               onChange={(event, selectedDate) => {
-                const currentDate = selectedDate || userData.birthday;
-                setUserData({ ...userData, birthday: currentDate });
+                if (selectedDate !== undefined) { // Check if a date is selected
+                  setUserData({ ...userData, birthDate: selectedDate });
+                }
               }}
             />
-
             <DropDownPicker
               open={openGender}
               value={userData.gender}
@@ -193,7 +201,7 @@ const SignupScreen = () => {
 
       <Snackbar
         visible={snackbarOpen}
-        onDismiss={() => {}}
+        onDismiss={() => { }}
         action={{
           label: "סגור",
           onPress: () => {
