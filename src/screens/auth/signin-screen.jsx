@@ -69,7 +69,6 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    direction: "rtl",
     textAlign: "left",
     paddingRight: 20,
   },

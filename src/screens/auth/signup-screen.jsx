@@ -6,6 +6,9 @@ import {
   ScrollView,
   SafeAreaView,
 } from "react-native";
+
+
+
 import { useNavigation } from "@react-navigation/native";
 //Import Dropdown Picker component
 import DropDownPicker from "react-native-dropdown-picker";
@@ -14,7 +17,6 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 
 //Import SnackBar Picker component
 import { Snackbar } from "react-native-paper";
-
 //React native expo store handler
 import * as SecureStore from "expo-secure-store";
 
@@ -23,6 +25,7 @@ import BigText from "../../components/texts/big-text/big-text";
 import RegularButton from "../../components/buttons/regular-button/regular-button";
 import RegularText from "../../components/texts/regular-text/regular-text";
 import { signupValidator } from "../../utils/scripts/formValidate";
+
 
 const SignupScreen = () => {
   const navigation = useNavigation();
@@ -33,7 +36,7 @@ const SignupScreen = () => {
     firstName: "", // User's first name
     lastName: "", // User's last name
     gender: "", // User's gender
-    birthDate: new Date(), // User's birthday, initialized with current date
+   // birthDate: new Date(), // User's birthday, initialized with current date
     email: "", // User's email address
     password: "", // User's password
   });
@@ -61,41 +64,31 @@ const SignupScreen = () => {
 
     const saveUser = async () => {
       try {
-        // Save token using SecureStore
-        //    await SecureStore.setItemAsync("secure_token1", "sahdkfjaskdflas$%^&");
-
         // Make API request to register user
-        const apiUrl = 'https://localhost:7207/api/Users';
-        fetch(apiUrl, {
+        const apiUrl = 'http://192.168.1.16:7207/api/Users';
+        const response = await fetch(apiUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json; charset=UTF-8'
+            'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: JSON.stringify(userData) // Pass user data as JSON
-        })
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Failed to register user');
-            }
-            return response.json();
-          })
-          .then(data => {
-            console.log('User registered successfully:', data);
-            // Navigate to next screen or perform other actions
-            navigation.navigate('Image');
-          })
-          .catch(error => {
-            // Handle any errors that occur during the API request
-            console.error('Error:', error);
-            // Optionally, show an error message to the user
-          });
+          body: JSON.stringify(userData), // Pass user data as JSON
+        });
+    
+        if (!response.ok) {
+          throw new Error('Failed to register user');
+        }
+    
+        const data = await response.json();
+        console.log('User registered successfully:', data);
+        // Navigate to next screen or perform other actions
+        navigation.navigate('Image');
       } catch (error) {
-        // Handle any errors that occur during saving the token
+        // Handle any errors that occur during the API request
         console.error('Error:', error);
         // Optionally, show an error message to the user
       }
     };
-
+    
 
     // Call the saveUser function
     await saveUser();
@@ -176,14 +169,7 @@ const SignupScreen = () => {
               }}
             />
 
-            <DateTimePicker
-              value={userData.birthDate} // Provide the current date as the initial value
-              onChange={(event, selectedDate) => {
-                if (selectedDate !== undefined) { // Check if a date is selected
-                  setUserData({ ...userData, birthDate: selectedDate });
-                }
-              }}
-            />
+           
             <DropDownPicker
               open={openGender}
               value={userData.gender}
@@ -226,8 +212,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "flex-start",
     justifyContent: "flex-start",
-    direction: "rtl",
-    textAlign: "left",
+    textAlign: "right",
     paddingRight: 20,
     paddingBottom: 20,
   },

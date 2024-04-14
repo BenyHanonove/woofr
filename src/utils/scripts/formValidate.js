@@ -31,12 +31,12 @@ export const signupValidator = (formData) => {
   }
 
   // Validation for birthday
-  if (!validateBirthday(formData.birthDate)) {
-    return {
-      isValid: false,
-      errorMessage: "חייב להיות לפחות בן 8 בשביל להירשם",
-    };
-  }
+  //if (!validateBirthday(formData.birthDate)) {
+   // return {
+     // isValid: false,
+    //  errorMessage: "חייב להיות לפחות בן 8 בשביל להירשם",
+   // };
+//  }
 
   // Validation for gender
   if (!formData.gender) {
