@@ -1,13 +1,10 @@
 import React from "react";
-import { StyleSheet, View, Image } from "react-native";
+import { StyleSheet, View,Text, Image } from "react-native";
 
 const WoofrHeader = () => {
     return (
         <View style={{ width: '100%', alignItems: "flex-end" }}>
-            <Image
-                style={styles.logo}
-                source={require('../../images/logo-wofer2.png')}
-            />
+           
         </View>
     );
 };

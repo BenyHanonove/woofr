@@ -1,6 +1,6 @@
 // SigninScreen.js
 import React from "react";
-import { StyleSheet, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View,Button } from "react-native";
 
 //React native expo store handler
 import { SecureStore } from "expo";
@@ -50,7 +50,9 @@ const SigninScreen = () => {
       <View>
         <RegularButton text={"התחבר"} onPress={loginUser} />
         <View style={styles.divider}></View>
-        <RegularButton text={"הירשם"} onPress={moveToSignup} />
+        <Button
+         title={"הירשם"}
+         onPress={() => navigation.navigate("Signup")} />
       </View>
     </View>
   );

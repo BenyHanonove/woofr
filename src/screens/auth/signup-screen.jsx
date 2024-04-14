@@ -38,6 +38,9 @@ const SignupScreen = () => {
     confirm: "", // Confirmation of user's password
   });
 
+
+  
+
   // State for dropdown picker visibility
   const [openGender, setOpenGender] = useState(false);
 
@@ -58,14 +61,41 @@ const SignupScreen = () => {
 
     const saveUser = async () => {
       try {
-        await SecureStore.setItemAsync("secure_token1", "sahdkfjaskdflas$%^&");
-        navigation.navigate("Image");
+        // Save token using SecureStore
+    //    await SecureStore.setItemAsync("secure_token1", "sahdkfjaskdflas$%^&");
+    
+        // Make API request to register user
+        const apiUrl = 'https://localhost:7207/api/Users';
+        fetch(apiUrl, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+          },
+          body: JSON.stringify(userData) // Pass user data as JSON
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to register user');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('User registered successfully:', data);
+          // Navigate to next screen or perform other actions
+          navigation.navigate('Image');
+        })
+        .catch(error => {
+          // Handle any errors that occur during the API request
+          console.error('Error:', error);
+          // Optionally, show an error message to the user
+        });
       } catch (error) {
         // Handle any errors that occur during saving the token
-        console.error("Error saving token:", error);
+        console.error('Error:', error);
         // Optionally, show an error message to the user
       }
     };
+    
 
     // Call the saveUser function
     await saveUser();

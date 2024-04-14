@@ -1,22 +1,19 @@
-// WelcomeScreen.js
 import React, { useEffect, useRef, useState } from "react";
-import { Animated, StyleSheet, View } from "react-native";
+import { Animated, StyleSheet, View, Button } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useNavigation } from "@react-navigation/native";
 
-//Store package for react native expo
+// Store package for React Native Expo
 import * as SecureStore from "expo-secure-store";
 
-//Array of features
+// Array of features
 import { features } from "../../utils/data/features";
 
-//Custom components
+// Custom components
 import BigText from "../../components/texts/big-text/big-text";
 import FeatureSlider from "../../components/scroll/feature-slider/feature-slider";
 import Pagination from "../../components/animation/pagination/pagination";
 import RegularButton from "../../components/buttons/regular-button/regular-button";
-
-//Navigation handler
-import { useNavigation } from "@react-navigation/native";
 
 const WelcomeScreen = () => {
   const [index, setIndex] = useState(0); // State variable to store the current index
@@ -44,11 +41,9 @@ const WelcomeScreen = () => {
       <View style={styles.container}>
         <BigText text={"PAWSWIPE"} />
         <FeatureSlider index={index} setIndex={setIndex} scrollX={scrollX} />
-        <RegularButton
-          text={"בוא נתחיל"}
-          onPress={() => {
-            navigation.navigate("Signin");
-          }}
+        <Button
+          title="בוא נתחיל"
+          onPress={() => navigation.navigate("Signin")}
         />
         <Pagination data={features} scrollX={scrollX} index={index} />
       </View>
@@ -61,9 +56,7 @@ const styles = StyleSheet.create({
     marginTop: 50,
     flex: 1,
     alignItems: "center",
-  },
-  flatListContainer: {
-    flex: 0.3,
+    justifyContent: "center",
   },
 });
 
