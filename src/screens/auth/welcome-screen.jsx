@@ -1,10 +1,8 @@
 // WelcomeScreen.js
+
 import React, { useEffect, useRef, useState } from "react";
 import { Animated, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-//Store package for react native expo
-import * as SecureStore from "expo-secure-store";
 
 //Array of features
 import { features } from "../../utils/data/features";
@@ -22,22 +20,6 @@ const WelcomeScreen = () => {
   const [index, setIndex] = useState(0); // State variable to store the current index
   const scrollX = useRef(new Animated.Value(0)).current; // Ref for tracking scroll position
   const navigation = useNavigation(); // Navigation object for navigating between screens
-
-  // Effect to run when component mounts (empty dependency array means it runs once)
-  useEffect(() => {
-    // Function to save isFirstOpening state to SecureStore
-    const saveOpening = async () => {
-      try {
-        // Save isFirstOpening state as true in SecureStore
-        await SecureStore.setItem("isFirstOpening", JSON.stringify(true));
-      } catch (error) {
-        // Log error if saving fails
-        console.error("Error saving isFirstOpening state:", error);
-      }
-    };
-
-    saveOpening();
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

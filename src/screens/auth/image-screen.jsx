@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+//image-screen.tsx
+
+import React, { useEffect, useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,22 +13,39 @@ import {
 //Import image picker
 import * as ImagePicker from "expo-image-picker";
 
+//Store user data handler
+import * as SecureStore from "expo-secure-store";
+
+//Redux handler state management
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/authSlice";
+
 //Custom components
 import BigText from "../../components/texts/big-text/big-text";
 import RegularText from "../../components/texts/regular-text/regular-text";
 import SmallText from "../../components/texts/small-text/small-text";
 import RegularButton from "../../components/buttons/regular-button/regular-button";
-import { useNavigation } from "@react-navigation/native";
+import { fakeLoginWithToken } from "../../utils/api/fake";
 
 const ImageScreen = ({}) => {
-  const navigation = useNavigation();
-
   //State to save the image
   const [image, setImage] = useState(null);
+  const [user, setUser] = useState(null);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = SecureStore.getItem("token");
+      const req = await fakeLoginWithToken(token);
+      if (req.status) {
+        setUser(req.value);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const pickImage = async () => {
-    // No permissions request is necessary for launching the image library
-
     // Launch the image library and await the result
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images, // Specify that only images are allowed
@@ -40,6 +59,30 @@ const ImageScreen = ({}) => {
       // If the image selection was not canceled, set the image URI in state
       setImage(result.assets[0].uri);
     }
+  };
+
+  const uploadImage = async () => {
+    if (!image) return;
+
+    try {
+      // Fetch the image data
+      const response = await fetch(image);
+      const blob = await response.blob();
+
+      // Convert blob to base64 string
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const base64data = reader.result;
+        // Save base64 data to SQL table
+      };
+    } catch (error) {
+      console.error("Error uploading image:", error);
+    }
+  };
+
+  const skipImageUpload = () => {
+    dispatch(login(user));
   };
 
   return (
@@ -65,7 +108,7 @@ const ImageScreen = ({}) => {
 
         <View style={styles.buttonContainer}>
           <RegularButton text={"הוסף"} onPress={uploadImage} />
-          <TouchableOpacity onPress={skipImageImageUpload} style={styles.skip}>
+          <TouchableOpacity onPress={skipImageUpload} style={styles.skip}>
             <SmallText text={"דלג"} />
           </TouchableOpacity>
         </View>

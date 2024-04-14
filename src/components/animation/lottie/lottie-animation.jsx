@@ -1,15 +1,11 @@
-import React, { useRef, useEffect } from "react";
-import { Button, StyleSheet, View } from "react-native";
+//lottie-animation.tsx
+
+import React, { useRef } from "react";
+import { StyleSheet, View } from "react-native";
 import LottieView from "lottie-react-native";
 
 const LottieAnimation = ({ lottieSource, width = 200, height = 200 }) => {
-  // Renamed component
   const animation = useRef(null);
-
-  useEffect(() => {
-    // You can control the ref programmatically, rather than using autoPlay
-    // animation.current?.play();
-  }, []);
 
   return (
     <View style={styles.animationContainer}>

@@ -1,6 +1,9 @@
+//pagination.jsx
+
 import { StyleSheet, Animated, View, Dimensions } from "react-native";
 import React from "react";
 
+// Destructuring 'width' from Dimensions
 const { width } = Dimensions.get("screen");
 
 const Pagination = ({ data, scrollX, index }) => {
@@ -12,12 +15,6 @@ const Pagination = ({ data, scrollX, index }) => {
         const dotWidth = scrollX.interpolate({
           inputRange,
           outputRange: [12, 30, 12],
-          extrapolate: "clamp",
-        });
-
-        const opacity = scrollX.interpolate({
-          inputRange,
-          outputRange: [0.2, 1, 0.1],
           extrapolate: "clamp",
         });
 

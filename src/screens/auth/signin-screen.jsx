@@ -1,5 +1,5 @@
 // SigninScreen.js
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   SafeAreaView,
   StatusBar,
@@ -19,33 +19,44 @@ import BigText from "../../components/texts/big-text/big-text";
 import RegularButton from "../../components/buttons/regular-button/regular-button";
 import RegularText from "../../components/texts/regular-text/regular-text";
 
-const SigninScreen = () => {
-  // Navigation object for navigating between screens
-  const navigation = useNavigation();
+//Redux handler state management
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/authSlice";
 
-  //State to save the form data for login
+import { fakeLogin } from "../../utils/api/fake";
+import { Snackbar } from "react-native-paper";
+
+const SigninScreen = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [loginData, setLoginData] = useState({
-    email: "",
-    password: "",
+    email: "amandawilson@example.com",
+    password: "world123",
   });
 
-  // Function to login user
-  const handleLoginEvent = async () => {
-    const tempUser = {
-      id: "123456",
-      firstName: "John",
-      lastName: "Doe",
-      gender: "Male",
-      birthday: new Date(1990, 5, 15),
-      email: "johndoe@example.com",
-      password: "password123",
-      confirm: "password123",
-    };
+  // State for managing the snackbar: storing text content to be displayed and controlling visibility
+  const [snackBarText, setSnackBarText] = useState("");
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
 
-    await SecureStore.setItem("user", JSON.stringify(tempUser));
+  const handleLoginEvent = async () => {
+    try {
+      const token = await fakeLogin(loginData.email, loginData.password);
+      if (token.status) {
+        SecureStore.setItem("token5", token.value);
+        dispatch(login(token));
+      } else {
+        // Close the snackbar after 3 seconds
+        setSnackbarOpen(true);
+        setSnackBarText("סיסמא או איימל לא נכונים");
+        setTimeout(() => {
+          setSnackbarOpen(false);
+        }, 3000);
+      }
+    } catch (error) {
+      console.error("Error saving token:", error);
+    }
   };
 
-  // Navigate to the Signup screen using the navigation object
   const moveToSignup = () => {
     navigation.navigate("Signup");
   };
@@ -65,6 +76,7 @@ const SigninScreen = () => {
 
         <View>
           <TextInput
+            value={loginData.email}
             placeholder="איימל"
             style={styles.input}
             onChangeText={(value) => {
@@ -72,6 +84,7 @@ const SigninScreen = () => {
             }}
           />
           <TextInput
+            value={loginData.password}
             placeholder="סיסמא"
             style={styles.input}
             onChangeText={(value) => {
@@ -86,6 +99,19 @@ const SigninScreen = () => {
           <RegularButton text={"הירשם"} onPress={moveToSignup} />
         </View>
       </View>
+
+      <Snackbar
+        visible={snackbarOpen}
+        onDismiss={() => {}}
+        action={{
+          label: "סגור",
+          onPress: () => {
+            setSnackbarOpen(false);
+          },
+        }}
+      >
+        {snackBarText}
+      </Snackbar>
     </SafeAreaView>
   );
 };

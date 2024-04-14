@@ -1,5 +1,9 @@
+//regular-button.tsx
+
 import React from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
+
+//Import custom components
 import RegularText from "../../texts/regular-text/regular-text";
 
 const RegularButton = ({ text, onPress }) => {

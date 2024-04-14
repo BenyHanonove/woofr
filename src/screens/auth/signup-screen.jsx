@@ -1,3 +1,5 @@
+//signup-screen.tsx
+
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
@@ -33,6 +35,7 @@ import GoBackButton from "../../components/buttons/go-back/go-back-button";
 //Import data and validators
 import { signupValidator } from "../../utils/scripts/formValidate";
 import { genders } from "../../utils/data/gender";
+import { fakeRegister } from "../../utils/api/fake";
 
 const isIos = Platform.OS === "ios";
 
@@ -55,13 +58,13 @@ const SignupScreen = () => {
   // State object to manage user data
   const [userData, setUserData] = useState({
     id: "", // User ID
-    firstName: "", // User's first name
-    lastName: "", // User's last name
-    gender: "", // User's gender
+    firstName: "בני", // User's first name
+    lastName: "חנונוב", // User's last name
+    gender: "male", // User's gender
     birthday: new Date(), // User's birthday (initialized to current date)
-    email: "", // User's email address
-    password: "", // User's password
-    confirm: "", // Confirmation of user's password
+    email: "benyx13@gmail.com", // User's email address
+    password: "Aa123456", // User's password
+    confirm: "Aa123456", // Confirmation of user's password
   });
 
   // Check if the app runs on iPhone
@@ -105,17 +108,24 @@ const SignupScreen = () => {
 
     // Generate a unique ID for the user data and Save user data
     setUserData({ ...userData, id: uuid.v4() });
-    await saveUser();
+    const isUserSaved = await saveUser();
+    if (isUserSaved) {
+      navigation.navigate("Image");
+    }
   };
 
   // Function to save user data (supposed to interact with an API)
   const saveUser = async () => {
     try {
-      // Placeholder for interacting with an API to save user data
-      // Example: const response = await axios.post('/api/user', userData);
+      const tokenData = fakeRegister(userData);
+      const token = tokenData._j;
+      if (token.status) {
+        SecureStore.setItem("token", JSON.stringify(token.value));
+      }
+      return true;
     } catch (error) {
-      // Log any errors that occur during the process
       console.error("Error saving user data:", error);
+      return false;
     }
   };
 

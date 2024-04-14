@@ -1,5 +1,9 @@
+//go-back-button.jsx
+
 import React from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
+
+//import expo icons
 import { Ionicons } from "@expo/vector-icons";
 
 const GoBackButton = ({ onPress }) => {

@@ -1,5 +1,9 @@
+//feature-card.jsx
+
 import React from "react";
 import { StyleSheet, View, useWindowDimensions, Image } from "react-native";
+
+//Import custom components
 import RegularText from "../../texts/regular-text/regular-text";
 import BigText from "../../texts/big-text/big-text";
 

@@ -1,18 +1,19 @@
-import React from "react";
-import { StyleSheet, Text } from "react-native";
+//small-text.jsx
 
-const RegularText = ({ text, english = false }) => {
+import React from "react";
+import { StyleSheet, View, Text } from "react-native";
+
+const SmallText = ({ text, english = false }) => {
   const textAlign = english ? "right" : "left";
   return <Text style={[styles.text, { textAlign }]}>{text}</Text>;
 };
 
 const styles = StyleSheet.create({
   text: {
-    fontSize: 20,
-    fontWeight: "bold",
+    fontSize: 16,
+    fontWeight: "normal",
     textAlign: "left",
-    padding: 4,
   },
 });
 
-export default RegularText;
+export default SmallText;
