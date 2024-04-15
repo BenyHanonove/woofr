@@ -13,7 +13,6 @@ const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 50,
     flex: 1,
     alignItems: "center",
   },

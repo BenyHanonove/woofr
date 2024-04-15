@@ -6,7 +6,7 @@ import { StyleSheet, TouchableOpacity } from "react-native";
 //Import custom components
 import RegularText from "../../texts/regular-text/regular-text";
 
-const RegularButton = ({ text, onPress }) => {
+const RegularButton = ({ text, onPress, width }) => {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>
       <RegularText text={text} />
@@ -19,9 +19,9 @@ const styles = StyleSheet.create({
     backgroundColor: "grey",
     padding: 10,
     borderRadius: 5,
-    width: 200,
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
 });
 
