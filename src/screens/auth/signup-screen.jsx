@@ -32,6 +32,7 @@ const SignupScreen = () => {
 
   // State for user data
   const [userData, setUserData] = useState({
+<<<<<<< Updated upstream
     username: "",
     firstName: "", // User's first name
     lastName: "", // User's last name
@@ -39,6 +40,17 @@ const SignupScreen = () => {
    // birthDate: new Date(), // User's birthday, initialized with current date
     email: "", // User's email address
     password: "", // User's password
+=======
+    id: "", // User ID
+    firstName: "בני", // User's first name
+    lastName: "חנונוב", // User's last name
+    username: "username", // User's last name
+    gender: "male", // User's gender
+    birthday: new Date(), // User's birthday (initialized to current date)
+    email: "benyx13@gmail.com", // User's email address
+    password: "Aa123456", // User's password
+    confirm: "Aa123456", // Confirmation of user's password
+>>>>>>> Stashed changes
   });
 
 
@@ -87,11 +99,46 @@ const SignupScreen = () => {
         console.error('Error:', error);
         // Optionally, show an error message to the user
       }
+<<<<<<< Updated upstream
     };
     
 
     // Call the saveUser function
     await saveUser();
+=======
+      // Make API request to register user
+      const apiUrl = 'http://192.168.1.16:7207/api/Users';
+      fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: JSON.stringify(userData), // Pass user data as JSON
+        
+      })
+        .then(response => {
+          
+          if (!response.ok) {
+            throw new Error('Failed to register user');
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log('User registered successfully:', data);
+          // Navigate to next screen or perform other actions
+          navigation.navigate('Image', { userId: data });
+        })
+        .catch(error => {
+          // Handle any errors that occur during the API request
+          console.error('Error:', error);
+          // Optionally, show an error message to the user
+        });
+    } catch (error) {
+      // Handle any errors that occur during saving the token
+      console.error('Error:', error);
+      // Optionally, show an error message to the user
+    }
+>>>>>>> Stashed changes
   };
 
   const genders = [
